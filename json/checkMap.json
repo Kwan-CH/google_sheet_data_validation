@@ -1,0 +1,8 @@
+{
+  "isNumeric": "isNumeric",
+  "isEmail": "isEmail",
+  "isDate": "isDate",
+  "isDuplicate": "isDuplicate",
+  "isPrefix": "isPrefix",
+  "isInOption": "isInOption"
+}
