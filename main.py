@@ -2,8 +2,10 @@ import pandas as pd
 import json
 
 from components.validator import Validator
-
 from components import error_logging, clear_formatting
+
+with open("json/config.json", "r") as file:
+    config = json.load(file)
 
 with open("json/checkMap.json", "r") as file:
     rule_map = json.load(file)
@@ -13,9 +15,6 @@ with open("json/column_rules.json", "r") as file:
 
 with open("json/data.json", "r") as file:
     rows = json.load(file)
-
-with open("json/config.json", "r") as file:
-    config = json.load(file)
 
 df = pd.DataFrame(rows, columns=list(column_rules.keys()))
 checker = Validator(df)
@@ -50,6 +49,7 @@ for error in sorted_errors:
     print(error)
 
 print("Error will be highlight now, and the error will be log in another sheet")
+
 import gspread
 from google.oauth2.service_account import Credentials
 scopes = [

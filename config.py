@@ -4,8 +4,11 @@ import time
 import gspread
 from google.oauth2.service_account import Credentials
 
-with open("json/config.json", "r") as file:
-    config = json.load(file)
+try:
+    with open("json/config.json", "r") as file:
+        config = json.load(file)
+except FileNotFoundError:
+    print("Please ensure that you have downloaded the JSON file from your service account, renamed as config.json and added into the json directory")
 
 scopes = [
     config['scopes']
@@ -47,8 +50,10 @@ except FileNotFoundError:
 finally:
     with open("json/data.json", "w") as file:
         json.dump(rows, file, indent=2)
+    print("column_rules.json has been created, please refer to readme.md to configure the json file")
 
-with open("json/config.json", "w") as file:
-    json.dump(config, file, indent=2)
-
-print("column_rules.json has been created, please refer to readme.md to configure the json file")
+try:
+    with open("json/config.json", "w") as file:
+        json.dump(config, file, indent=2)
+except FileNotFoundError:
+    print("Please ensure that you have downloaded the JSON file from your service account, renamed as config.json and added into the json directory")
