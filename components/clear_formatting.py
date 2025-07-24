@@ -1,9 +1,9 @@
-def clear_format(workbook, sheetID, headers, df):
+def clear_format(workbook, sheetID, headers, df, headerIdx):
     clear_formatting_request = {
             "repeatCell": {
                 "range": {
                     "sheetId": sheetID,
-                    "startRowIndex": 1,
+                    "startRowIndex": headerIdx + 1,
                     "endRowIndex": len(df) + 1,
                     "startColumnIndex": 0,
                     "endColumnIndex": len(headers),
