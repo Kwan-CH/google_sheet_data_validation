@@ -1,32 +1,13 @@
+from inspect import signature
+
 import pandas as pd
+
 import json
-
-from components.validator import Validator
-from components import error_logging, clear_formatting
+from components import clear_formatting, error_logging
 from components.customError import unrecognizedRule
-
-def highlightError():
-    print("All data has been validated, below are the errors found")
-    sorted_errors = sorted(checker.error_log, key=lambda x: x['location'])
-    for error in sorted_errors:
-        print(error)
-
-    print("Error will be highlight now, and the error will be log in another sheet")
-
-    import gspread
-    from google.oauth2.service_account import Credentials
-    scopes = [
-        config['scopes']
-    ]
-    creds = Credentials.from_service_account_file("json/config.json", scopes=scopes)
-
-    client = gspread.authorize(creds)
-    sheet_credential = config["workbookID"]
-    workbook = client.open_by_key(sheet_credential)
-
-    clear_formatting.clear_format(workbook, config["sheetID"], list(column_rules.keys()), df)
-    error_logging.highlight_error(workbook, config["sheetID"], sorted_errors)
-    error_logging.log_error(workbook, sorted_errors)
+from components.getWorkbook import getWorkbook
+from components.sort_location import sort_error_list
+from components.validator import Validator
 
 with open("json/config.json", "r") as file:
     config = json.load(file)
@@ -34,38 +15,53 @@ with open("json/config.json", "r") as file:
 with open("json/checkMap.json", "r") as file:
     rule_map = json.load(file)
 
-with open("json/column_rules.json", "r") as file:
+name = "test_data"
+# name = input("Please enter the json file to be used\nName: ").strip()
+with open(f"worksheet_column/{name}.json", "r") as file:
     column_rules = json.load(file)
 
-with open("json/data.json", "r") as file:
-    rows = json.load(file)
+# with open(f"worksheet_column/column_rules.json", "r") as file:
+#     column_rules = json.load(file)
 
-df = pd.DataFrame(rows, columns=list(column_rules.keys()))
-checker = Validator(df)
+def highlightError(df, sorted_errors):
+    print("All data has been validated, below are the errors found")
+    # for error in sorted_errors:
+    #     print(error)
+    print(f"Total Error: {len(sorted_errors)}\n")
 
-try:
-    for idx, row in df.iterrows():
-        for column, rule in column_rules.items():
-            param_flag = False
-            if not rule:
-                continue  # skip empty
+    print("Error will be highlight now, and the error will be log in another sheet")
 
-            if ":" in rule:
-                param_flag = True
-                rule, param = rule.split(":")
-                if ", " in param:
-                    param = [opt.strip() for opt in param.split(",")]
+    workbook = getWorkbook()
 
-            mapped = rule_map[rule]
+    clear_formatting.clear_format(workbook, config["sheetID"], list(column_rules.keys()), df, config["headerIndex"])
+    error_logging.highlight_error(workbook, config["sheetID"], sorted_errors)
+    error_logging.log_error(workbook, sorted_errors)
 
-            if mapped == "":
-                pass  # skip if rule not found in map
+def main():
+    workbook = getWorkbook()
+    sheet = workbook.worksheet(config["worksheetName"])
+    records = sheet.get_all_values()
+    data = records[config["headerIndex"] + 1:]
+
+    df = pd.DataFrame(data, columns=column_rules.keys())
+    checker = Validator(df)
+
+    for column, ruleParam in column_rules.items():
+        rule = ruleParam.get("rule")
+        param = ruleParam.get("param")
+        allowEmpty = ruleParam.get("allowEmpty")
+        if rule.strip() == "":
+            pass
+        elif rule not in list(rule_map.keys()):
+            raise unrecognizedRule(rule)
+        else:
+            func = getattr(checker, rule)
+            if len(signature(func).parameters) > 1:
+                func(column, param, allowEmpty)
             else:
-                method = getattr(checker, rule_map.get(rule))
-                if param_flag:
-                    method(row, column, param)
-                else:
-                    method(row, column)
-    highlightError()
-except KeyError as e:
-    raise unrecognizedRule(e) from None
+                func(column, allowEmpty)
+    sorted_errors = sort_error_list(checker.error_log)
+
+    highlightError(df, sorted_errors)
+
+main()

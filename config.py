@@ -30,15 +30,16 @@ def write_column_rule(action, name):
     headers_json = {
         header: {
             "rule": "",
-            "param": ""
+            "param": "",
+            "allowEmpty": "False"
         }
         for header in headers
     }
     if action == "create":
-        with open(f"json/{name}.json", "x") as file:
+        with open(f"worksheet_column/{name}.json", "x") as file:
             json.dump(headers_json, file, indent=4)
     else:
-        with open(f"json/{name}.json", "w") as file:
+        with open(f"worksheet_column/{name}.json", "w") as file:
             json.dump(headers_json, file, indent=4)
 
 
