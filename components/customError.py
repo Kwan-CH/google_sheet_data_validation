@@ -11,3 +11,7 @@ class missingField(Exception):
 class unrecognizedRule(Exception):
     def __init__(self, rule):
         super().__init__(f"\nIt seems you wrote a rule called {rule} that does not exist, please refer to checkMap.json to enter the correct rule")
+
+class invalidMinMax(Exception):
+    def __init__(self):
+        super().__init__(f"\nYour value for min or max for isNumeric rule set wrongly, which cannot be parse into a positive integer, please change it")
