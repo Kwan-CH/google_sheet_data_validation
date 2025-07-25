@@ -1,0 +1,50 @@
+{
+    "String": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "Number": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "Email": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "Date": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "Duplicate": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "Prefix": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "Option": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    },
+    "ASCII": {
+        "rule": "",
+        "param": {
+            "allowEmpty": "False"
+        }
+    }
+}
