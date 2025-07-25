@@ -15,3 +15,11 @@ class unrecognizedRule(Exception):
 class invalidMinMax(Exception):
     def __init__(self):
         super().__init__(f"\nYour value for min or max for isNumeric rule set wrongly, which cannot be parse into a positive integer, please change it")
+
+class invalidArgs(Exception):
+    def __init__(self, param, argument, message):
+        super().__init__(f"The value of {param} is set to {argument} which is unrecognizable\n{message}")
+
+class missingPair(Exception):
+    def __init__(self):
+        super().__init__("minimum and maximum parameter should exist in pair, missing one can cause the program to break, please add the missing one in")
