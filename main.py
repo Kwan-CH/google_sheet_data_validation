@@ -1,3 +1,4 @@
+from functools import partial
 from inspect import signature
 
 import pandas as pd
@@ -49,17 +50,19 @@ def main():
     for column, ruleParam in column_rules.items():
         rule = ruleParam.get("rule")
         param = ruleParam.get("param")
-        allowEmpty = ruleParam.get("allowEmpty")
         if rule.strip() == "":
             pass
         elif rule not in list(rule_map.keys()):
             raise unrecognizedRule(rule)
         else:
+            flatten = {
+                "column_name": column,
+                **param
+            }
             func = getattr(checker, rule)
-            if len(signature(func).parameters) > 1:
-                func(column, param, allowEmpty)
-            else:
-                func(column, allowEmpty)
+            wrapper = partial(func, **flatten)
+            wrapper()
+
     sorted_errors = sort_error_list(checker.error_log)
 
     highlightError(df, sorted_errors)
