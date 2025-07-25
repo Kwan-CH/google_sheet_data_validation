@@ -1,10 +1,32 @@
 {
-  "isContains": "isContains",
-  "isNumeric": "isNumeric",
-  "isEmail": "isEmail",
-  "isDate": "isDate",
-  "isDuplicate": "isDuplicate",
-  "isPrefix": "isPrefix",
-  "isInOption": "isInOption",
-  "isASCII": "isASCII"
+  "isContains": {
+    "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, \", ', @, $",
+    "allowEmpty": "Default is False, option allow is True"
+  },
+  "isNumeric": {
+    "minimum": "the minimum value, optional",
+    "maximum": "the maximum value, optional",
+    "allowNegative": "Default is False, option allow is True",
+    "allowEmpty":  "Default is False, option allow is True"
+  },
+  "isEmail": {
+    "allowEmpty":  "Default is False, option allow is True"
+  },
+  "isDate": {
+    "allowEmpty":  "Default is False, option allow is True"
+  },
+  "isDuplicate": {
+    "allowEmpty":  "Default is False, option allow is True"
+  },
+  "isPrefix": {
+    "prefix": "the word or character that the cell SHOULD start with",
+    "allowEmpty":  "Default is False, option allow is True"
+  },
+  "isInOption": {
+    "options": "option that the cell should match",
+    "allowEmpty":  "Default is False, option allow is True"
+  },
+  "isASCII": {
+    "allowEmpty":  "Default is False, option allow is True"
+  }
 }
