@@ -24,14 +24,15 @@ try:
 except FileNotFoundError as e:
     raise customException.missingConfigJSON from None
 
-
+# **kwargs, method signature, partial, call without args
 def write_column_rule(action, name):
     headers = records[header_idx]  # your original header list
     headers_json = {
         header: {
             "rule": "",
-            "param": "",
-            "allowEmpty": "False"
+            "param":{
+                "allowEmpty": "False"
+            }
         }
         for header in headers
     }
@@ -41,7 +42,6 @@ def write_column_rule(action, name):
     else:
         with open(f"worksheet_column/{name}.json", "w") as file:
             json.dump(headers_json, file, indent=4)
-
 
 while True:
     try:
