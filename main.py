@@ -16,8 +16,8 @@ with open("json/config.json", "r") as file:
 with open("json/checkMap.json", "r") as file:
     rule_map = json.load(file)
 
-name = "test_data"
-# name = input("Please enter the json file to be used\nName: ").strip()
+# name = "sample"
+name = input("Please enter the json file to be used\nName: ").strip()
 with open(f"worksheet_column/{name}.json", "r") as file:
     column_rules = json.load(file)
 
@@ -32,11 +32,13 @@ def highlightError(df, sorted_errors):
 
     print("Error will be highlight now, and the error will be log in another sheet")
 
-    workbook = getWorkbook()
-
-    clear_formatting.clear_format(workbook, config["sheetID"], list(column_rules.keys()), df, config["headerIndex"])
-    error_logging.highlight_error(workbook, config["sheetID"], sorted_errors)
-    error_logging.log_error(workbook, sorted_errors)
+    if len(sorted_errors) == 0:
+        print("No error found, can proceed to the next step....")
+    else:
+        workbook = getWorkbook()
+        clear_formatting.clear_format(workbook, config["sheetID"], list(column_rules.keys()), df, config["headerIndex"])
+        error_logging.highlight_error(workbook, config["sheetID"], sorted_errors)
+        error_logging.log_error(workbook, sorted_errors)
 
 def main():
     workbook = getWorkbook()
