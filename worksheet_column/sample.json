@@ -2,49 +2,49 @@
     "String": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "Number": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "Email": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "Date": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "Duplicate": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "Prefix": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "Option": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     },
     "ASCII": {
         "rule": "",
         "param": {
-            "allowEmpty": "False"
+            "allowEmpty": false
         }
     }
 }
