@@ -4,7 +4,7 @@ import re
 import pandas as pd
 from gspread.utils import rowcol_to_a1
 
-from components.customError import invalidMinMax, invalidArgs, missingPair, unrecognizedRule
+from components.customError import invalidMinMax, invalidArgs, missingPair
 
 
 class Validator:
@@ -42,7 +42,7 @@ class Validator:
             )
 
     def isEmpty(self, column_name, allowEmpty):
-        if allowEmpty.capitalize() == "True":
+        if allowEmpty:
             return pd.Series(False, index=self.df.index)
         else:
             mask = self.df[column_name].str.strip() == ""
@@ -56,7 +56,7 @@ class Validator:
         return mask
 
     # substring
-    def isContains(self, column_name, blackList=None, allowEmpty="False"):
+    def isContains(self, column_name, blackList=None, allowEmpty=False):
         if blackList is None or blackList.strip() == "":
             blackListed = self.DEFAULT_BLACKLIST
         else:
@@ -72,28 +72,29 @@ class Validator:
         self.vectorized_log_error(mask, column_name,
                                       f"This section cannot have one of the following character: {pattern}")
 
-    def isNumeric(self, column_name, minimum=None, maximum=None, allowNegative="False", allowEmpty="False"):
+    def isNumeric(self, column_name, minimum=None, maximum=None, allowNegative=False, allowEmpty=False):
         try:
             numeric_col = pd.to_numeric(self.df[column_name], errors='coerce')
 
             non_empty_row = ~self.isEmpty(column_name, allowEmpty)
             isNumeric = numeric_col.notna()
             valid_row = non_empty_row & isNumeric
-            if allowNegative.capitalize() == "True":
-                alphanumeric = self.df[column_name].str.contains(r'[a-zA-Z]')
-                self.vectorized_log_error(alphanumeric, column_name, "Please enter digits only!")
+            if isinstance(allowNegative, bool):
+                if allowNegative:
+                    alphanumeric = self.df[column_name].str.contains(r'[a-zA-Z]')
+                    self.vectorized_log_error(alphanumeric, column_name, "Please enter digits only!")
 
-                bad_format = ~self.df[column_name].str.match(self.VALID_NEGATIVE_REGEX) & ~isNumeric & ~alphanumeric
-                self.vectorized_log_error(bad_format, column_name,
-                                          "Please ensure that there is no space between the negative sign and the number")
-            elif allowNegative.capitalize() == "False":
-                non_numeric = non_empty_row & ~isNumeric
-                self.vectorized_log_error(non_numeric, column_name, "Please enter digits and positive number only")
+                    bad_format = ~self.df[column_name].str.match(self.VALID_NEGATIVE_REGEX) & ~isNumeric & ~alphanumeric
+                    self.vectorized_log_error(bad_format, column_name,
+                                              "Please ensure that there is no space between the negative sign and the number")
+                else:
+                    non_numeric = non_empty_row & ~isNumeric
+                    self.vectorized_log_error(non_numeric, column_name, "Please enter digits and positive number only")
 
-                negative = valid_row & (numeric_col < 0)
-                self.vectorized_log_error(negative, column_name, "Negative numbers are not allowed")
+                    negative = valid_row & (numeric_col < 0)
+                    self.vectorized_log_error(negative, column_name, "Negative numbers are not allowed")
             else:
-                raise invalidArgs("allowNegative", allowNegative, "Please enter True or False only")
+                raise invalidArgs("allowNegative", allowNegative, "Please enter true or false only")
 
             if minimum is None and maximum is None:
                pass
@@ -108,13 +109,13 @@ class Validator:
         except ValueError:
             raise invalidMinMax from None
 
-    def isEmail(self, column_name, allowEmpty="False"):
+    def isEmail(self, column_name, allowEmpty=False):
         non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
         ascii_row = ~(self.isASCII(column_name))
         mask = non_empty_row & ascii_row & ~self.df[column_name].str.match(self.EMAIL_PATTERN)
         self.vectorized_log_error(mask, column_name, "Please enter a valid email")
 
-    def isDate(self, column_name, allowEmpty="False"):
+    def isDate(self, column_name, allowEmpty=False):
         non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
         regex_match = self.df[column_name].str.match(self.DATE_REGEX)
         parsed_date = pd.to_datetime(self.df[column_name], format=self.DATE_FORMAT, errors="coerce")
@@ -129,7 +130,7 @@ class Validator:
         self.vectorized_log_error(invalidDate, column_name,
                           "Please ensure you have enter a correct format, day/month/year, and please double confirm on leap year")
 
-    def isDuplicate(self, column_name, allowEmpty="False"):
+    def isDuplicate(self, column_name, allowEmpty=False):
         non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
         ascii_row = ~(self.isASCII(column_name))
         valid_row  = non_empty_row & ascii_row
@@ -149,7 +150,7 @@ class Validator:
                 "error": f"Has duplicate value: '{value}'"
             })
 
-    def isPrefix(self, column_name, prefix=None, allowEmpty="False"):
+    def isPrefix(self, column_name, prefix=None, allowEmpty=False):
         if prefix is None or prefix.strip() == "":
             raise invalidArgs("prefix", prefix, "Please enter a word or character to be use as prefix checker")
         else:
@@ -159,7 +160,7 @@ class Validator:
             self.vectorized_log_error(mask, column_name, f"Please enter data that starts with {prefix}")
 
     # isEqual
-    def isInOption(self, column_name, options=None, allowEmpty="False"):
+    def isInOption(self, column_name, options=None, allowEmpty=False):
         if options is None or options.strip() == "":
             raise invalidArgs("options", options, "Please enter a list of options that the cell should match")
         else:

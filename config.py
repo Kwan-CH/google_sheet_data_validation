@@ -31,7 +31,7 @@ def write_column_rule(action, name):
         header: {
             "rule": "",
             "param":{
-                "allowEmpty": "False"
+                "allowEmpty": False
             }
         }
         for header in headers
