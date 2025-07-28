@@ -170,3 +170,17 @@ class Validator:
             mask = non_empty_row & ascii_row & ~self.df[column_name].isin(option_list)
             self.vectorized_log_error(mask, column_name,
                                   f"Please only enter the options available in [{options}], AS EXACTLY AS IT IS")
+
+    def isAlphanumeric(self, column_name, allowEmpty=False):
+        non_empty_row = (self.isEmpty(column_name, allowEmpty))
+        non_ascii_row = ~(self.isASCII(column_name))
+
+        if allowEmpty:
+            pattern = r"^[a-zA-Z0-9 ]*$"
+        else:
+            pattern = r"^[a-zA-Z0-9 ]+$"
+
+        non_alphanumeric = ~self.df[column_name].str.match(pattern)
+        mask = non_ascii_row & (non_empty_row | non_alphanumeric)
+        self.vectorized_log_error(mask, column_name,
+                                  f"Please only enter alphanumeric character, no symbols")

@@ -26,7 +26,7 @@
     "options": "option that the cell should match",
     "allowEmpty":  "Default is false, option allow is true"
   },
-  "isASCII": {
+  "isAlphanumeric": {
     "allowEmpty":  "Default is false, option allow is true"
   }
 }
