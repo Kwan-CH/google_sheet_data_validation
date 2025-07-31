@@ -8,9 +8,6 @@ from components.customError import invalidMinMax, invalidArgs, missingPair
 
 
 class Validator:
-    with open("json/config.json", "r") as file:
-        config = json.load(file)
-    ROW_OFFSET = config["headerIndex"] + 2
     COLUMN_OFFSET = 1
     EMAIL_PATTERN = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     DATE_FORMAT = "%d/%m/%Y"
@@ -18,10 +15,11 @@ class Validator:
     VALID_NEGATIVE_REGEX = re.compile(r"^-?\d+(\.\d+)?$")
     DEFAULT_BLACKLIST = ("%", "#", "@", "$")
 
-    def __init__(self, df):
+    def __init__(self, df, headerIdx):
         self.df = df
         self.error_log = []
         self.duplicate_masks = {}
+        self.ROW_OFFSET = headerIdx + 2
 
     def get_a1_idx(self, idx, column_name):
         row_num = idx + self.ROW_OFFSET

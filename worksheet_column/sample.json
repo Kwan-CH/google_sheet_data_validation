@@ -1,48 +1,53 @@
 {
     "String": {
-        "rule": "",
+        "rule": "isAlphanumeric",
         "param": {
             "allowEmpty": false
         }
     },
     "Number": {
-        "rule": "",
+        "rule": "isNumeric",
         "param": {
-            "allowEmpty": false
+            "allowEmpty": false,
+            "allowNegative": false,
+            "minimum": 0,
+            "maximum": 100
         }
     },
     "Email": {
-        "rule": "",
+        "rule": "isEmail",
         "param": {
             "allowEmpty": false
         }
     },
     "Date": {
-        "rule": "",
+        "rule": "isDate",
         "param": {
             "allowEmpty": false
         }
     },
     "Duplicate": {
-        "rule": "",
+        "rule": "isDuplicate",
         "param": {
             "allowEmpty": false
         }
     },
     "Prefix": {
-        "rule": "",
+        "rule": "isPrefix",
         "param": {
-            "allowEmpty": false
+            "allowEmpty": false,
+            "prefix": "PRE"
         }
     },
     "Option": {
-        "rule": "",
+        "rule": "isInOption",
         "param": {
-            "allowEmpty": false
+            "allowEmpty": false,
+            "options": "kiwi, orange, apple"
         }
     },
     "ASCII": {
-        "rule": "",
+        "rule": "isAlphanumeric",
         "param": {
             "allowEmpty": false
         }

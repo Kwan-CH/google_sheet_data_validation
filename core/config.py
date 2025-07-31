@@ -4,12 +4,11 @@ import components.customError as customException
 from components.getWorkbook import getWorkbook
 
 try:
-    with open("json/config.json", "r") as file:
+    with open("../json/config.json", "r") as file:
         config = json.load(file)
 
-        workbook = getWorkbook()
-        sheet = workbook.worksheet(config["worksheetName"])
-        config["sheetID"] = sheet._properties['sheetId']
+        workbook = getWorkbook("1hcl6MOoWldcINFElTElvEuJoG0HU3OpmZMCf8UOQHYo")
+        sheet = workbook.get_worksheet_by_id("1122075977")
 
         records = sheet.get_all_values()
         for record in records:
@@ -17,14 +16,10 @@ try:
                 pass
             else:
                 header_idx = records.index(record)
-                config["headerIndex"] = header_idx
                 break
-    with open("json/config.json", "w") as file:
-        json.dump(config, file, indent=2)
 except FileNotFoundError as e:
     raise customException.missingConfigJSON from None
 
-# **kwargs, method signature, partial, call without args
 def write_column_rule(action, name):
     headers = records[header_idx]  # your original header list
     headers_json = {
