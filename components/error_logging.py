@@ -38,14 +38,14 @@ def highlight_error(workbook, sheetID, sorted_errors):
 
     workbook.batch_update({"requests": requests})
 
-def log_error(workbook, sorted_errors):
+def log_error(workbook, sorted_errors, sheetTitle):
     rows = [['Location', 'Error']]
     rows += [[entry['location'], entry['error']] for entry in sorted_errors]
 
     try:
-        error_ws = workbook.worksheet('Error Log')
+        error_ws = workbook.worksheet(f'{sheetTitle}-Error Log')
     except gspread.WorksheetNotFound:
-        error_ws = workbook.add_worksheet(title='Error Log', rows=len(rows), cols=len(rows[0]))
+        error_ws = workbook.add_worksheet(title=f'{sheetTitle}-Error Log', rows=len(rows), cols=len(rows[0]))
 
     error_ws.clear()
     error_ws.update(range_name='A1', values=rows)

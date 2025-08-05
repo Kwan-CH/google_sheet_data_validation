@@ -1,27 +1,15 @@
 import json
+import os
+import glob
 
-import components.customError as customException
 from components.getWorkbook import getWorkbook
 
-try:
-    with open("../json/config.json", "r") as file:
-        config = json.load(file)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+CONFIG_JSON_PATH = os.path.join(BASE_DIR, 'json', 'config.json')
+WORKSHEET_COLUMN_PATH = os.path.join(BASE_DIR, 'worksheet_column')
 
-        workbook = getWorkbook("1hcl6MOoWldcINFElTElvEuJoG0HU3OpmZMCf8UOQHYo")
-        sheet = workbook.get_worksheet_by_id("1122075977")
-
-        records = sheet.get_all_values()
-        for record in records:
-            if "#" in record[0]:
-                pass
-            else:
-                header_idx = records.index(record)
-                break
-except FileNotFoundError as e:
-    raise customException.missingConfigJSON from None
-
-def write_column_rule(action, name):
-    headers = records[header_idx]  # your original header list
+def write_column_rule(workbook, sheet, sheetID, headers):
+    name = f"{workbook.title}-{sheet.title}-{sheetID}"
     headers_json = {
         header: {
             "rule": "",
@@ -31,33 +19,28 @@ def write_column_rule(action, name):
         }
         for header in headers
     }
-    if action == "create":
-        with open(f"worksheet_column/{name}.json", "x") as file:
-            json.dump(headers_json, file, indent=4)
-    else:
-        with open(f"worksheet_column/{name}.json", "w") as file:
-            json.dump(headers_json, file, indent=4)
+    with open(os.path.join(WORKSHEET_COLUMN_PATH, f"{name}.json"), "x") as file:
+        json.dump(headers_json, file, indent=4)
 
-while True:
-    try:
-        choice = int(input("\nAre you...\n"
-                           "1: working on a new worksheet? \n\t- A new json file will be created\n"
-                           "2: modifying existing worksheet? \n\t- Be advice that existing rule will be cleared make sure to have a backup beforehand\n"
-                           "Please enter a choice: "))
-        if choice == 1:
-            name = input("\nPlease enter the name for the json file \n\t** no need to include .json extension\nName: ")
-            write_column_rule("create", name)
-            break
-        elif choice == 2:
-            name = input("\nPlease enter the name of the json file \n\t** no need to include .json extension\nName: ")
-            write_column_rule("modify", name)
-            break
+def read_column(workbookID, sheetID):
+    workbook = getWorkbook(workbookID)
+    sheet = workbook.get_worksheet_by_id(sheetID)
+
+    header_idx = 0
+    records = sheet.get_all_values()
+    for record in records:
+        if "#" in record[0]:
+            pass
         else:
-            print("\nPlease only select 1 or 2")
-    except ValueError:
-        print("Please enter digits only!!!")
+            header_idx = records.index(record)
+            break
+    headers = records[header_idx]
 
-print("Sheet\'s column have been retrieved...")
+    WORKSHEET_DIR = os.path.join(BASE_DIR, "worksheet_column")
+    file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheetID}*')
 
-print("Please configure the rules to be applied for the column, then run the main.py to start the validation")
-# main()
+    if file_name:
+        return {"code": 409, "message": f"A file with the same configuration format existed, please look for file with the code and the gid at the url: {sheetID}"}
+    else:
+        write_column_rule(workbook, sheet, sheetID, headers)
+        return {"code": 201, "message": "The column rule file is created, you can now configure the rules"}
