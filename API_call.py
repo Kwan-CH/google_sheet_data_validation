@@ -16,7 +16,10 @@ async def validate_post(payload: dict = Body(...)):
     for item in worksheets:
         workbookID = item.get('workbookID')
         sheetID = item.get('sheetID')
-        response= main.run_validation(workbookID, sheetID)
+        sheetName = item.get('sheetName')
+        print(sheetName)
+        response= main.run_validation(workbookID, sheetID, sheetName)
+        print(response.get("message"))
         return {"code": response.get("code"), "message": f"{response.get("message")}"}
 
 @app.post("/initialize")

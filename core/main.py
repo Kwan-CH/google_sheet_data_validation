@@ -9,7 +9,8 @@ from components import error_logging
 from components.customError import unrecognizedRule
 from components.getWorkbook import getWorkbook
 from components.sort_location import sort_error_list
-from components.validator import Validator
+from components.data_validator import Validator
+from components.structure_validator import correctFormat
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 JSON_DIR = os.path.join(BASE_DIR, 'json')
@@ -42,9 +43,9 @@ def formatCheck(headers, column_rules):
     return correctFormat
 
 
-def run_validation(workbookID, sheetID):
+def run_validation(workbookID, sheetID, sheetName):
     WORKSHEET_DIR = os.path.join(BASE_DIR, "worksheet_column")
-    file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheetID}*')
+    file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheetName}*')
 
     if not file_name:
         return {"code": 404, "message": "The correspond column rules json file haven't been create, please create and configure it now"}
@@ -63,10 +64,8 @@ def run_validation(workbookID, sheetID):
             else:
                 header_idx = records.index(record)
                 break
-
-        correctFormat = formatCheck(records[header_idx], column_rules)
-        # correctFormat = False
-        if correctFormat:
+        correctFormatResponse = correctFormat(sheet, records[header_idx], column_rules)
+        if correctFormatResponse.get("status"):
             data = records[header_idx + 1:]
 
             df = pd.DataFrame(data, columns=column_rules.keys())
@@ -92,4 +91,4 @@ def run_validation(workbookID, sheetID):
             code, message = highlightError(workbookID, sheetID, df, sorted_errors, header_idx, column_rules)
             return {"code": code, "message": message}
         else:
-            return {"code": 400, "message": "Add/remove column or change column name is prohibited, please change back to original"}
+            return {"code": 400, "message": correctFormatResponse.get("message") + "Kindly revert the changes that you have made"}

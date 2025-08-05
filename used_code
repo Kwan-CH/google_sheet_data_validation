@@ -1,0 +1,6 @@
+400, format not match (add/delete column, chnage column name)
+404, column rule haven't set
+409, duplicate sheet id file found
+200, validation success
+201, column file json created
+204, no error found

@@ -8,8 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CONFIG_JSON_PATH = os.path.join(BASE_DIR, 'json', 'config.json')
 WORKSHEET_COLUMN_PATH = os.path.join(BASE_DIR, 'worksheet_column')
 
-def write_column_rule(workbook, sheet, sheetID, headers):
-    name = f"{workbook.title}-{sheet.title}-{sheetID}"
+def write_column_rule(sheet, headers):
+    name = f"{sheet.title}-column_rules"
     headers_json = {
         header: {
             "rule": "",
@@ -42,5 +42,5 @@ def read_column(workbookID, sheetID):
     if file_name:
         return {"code": 409, "message": f"A file with the same configuration format existed, please look for file with the code and the gid at the url: {sheetID}"}
     else:
-        write_column_rule(workbook, sheet, sheetID, headers)
+        write_column_rule(sheet, headers)
         return {"code": 201, "message": "The column rule file is created, you can now configure the rules"}
