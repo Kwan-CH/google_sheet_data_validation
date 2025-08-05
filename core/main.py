@@ -21,11 +21,6 @@ with open(os.path.join(JSON_DIR, "checkMap.json"), "r") as file:
     rule_map = json.load(file)
 
 def highlightError(workbookID, sheetID, df, sorted_errors, headerIndex, column_rules):
-    # print("All data has been validated, below are the errors found")
-    # # for error in sorted_errors:
-    # #     print(error)
-    print(f"Total Error: {len(sorted_errors)}\n")
-    print("Error will be highlight now, and the error will be log in another sheet")
     if len(sorted_errors) == 0:
         return 204, "No error found, can proceed to the next step...."
     else:
