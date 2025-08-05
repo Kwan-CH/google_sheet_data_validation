@@ -1,6 +1,6 @@
 {
   "isContains": {
-    "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, \", ', @, $",
+    "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, @, $",
     "allowEmpty": "Default is false, option allow is true"
   },
   "isNumeric": {
