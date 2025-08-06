@@ -1,2 +1,4 @@
 /json/config.json
 /myvenv/
+.venv
+__pycache__
