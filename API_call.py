@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from core import main
 from core.config import read_column
 import os
+import glob
 
 app = FastAPI()
 
@@ -44,12 +45,13 @@ async def return_json_file():
 
 @app.get("/download-json")
 async def download_json_file(filename: str = Query(...)):
-    file_path = os.path.join(JSON_FILE_PATH, filename)
-    if not filename.endswith(".json") or not os.path.isfile(file_path):
+    file_path = glob.glob(f'{JSON_FILE_PATH}/*{filename}*')
+
+    if not file_path:
         raise HTTPException(status_code=404, detail="File not found.")
     
     return FileResponse(
-        path=file_path,
+        path=file_path[0],
         media_type="application/json",
         filename=filename
     )
