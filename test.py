@@ -60,22 +60,23 @@ def download_json_file(filename):
 
 def upload_json_file():
     # Currently works only in Windows OS
-    json_file_path = filedialog.askopenfilename(title="Select JSON file")
-    if not json_file_path.endswith(".json"):
-        print("Only .json files are allowed")
-        return
-    with open(json_file_path, "rb") as f:
-        files = {"file": (os.path.basename(json_file_path), f, "application/json")}
-        response = requests.post(f"{BASE_URL}/upload-json", files=files)
-        if response.status_code == 200:
-            print("File uploaded successfully")
-        else:
-            print(f"Error: {response.status_code} - {response.text}")
+    json_file_path = filedialog.askopenfilenames(title="Select JSON file")
+    # if not json_file_path.endswith(".json"):
+    #     print("Only .json files are allowed")
+    #     return
+    files = [("files", (open(path, "rb"))) for path in json_file_path]
+    # with open(json_file_path, "rb") as f:
+    #     files = {"file": (os.path.basename(json_file_path), f, "application/json")}
+    response = requests.post(f"{BASE_URL}/upload-json", files=files)
+    if response.status_code == 200:
+        print("File uploaded successfully")
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
 
 # validate_get()
 
 # initialise_post()
 # validate_post()
 # return_json_file()
-download_json_file("sample.json")
-# upload_json_file()
+# download_json_file("sample.json")
+upload_json_file()
