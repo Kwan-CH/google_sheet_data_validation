@@ -37,7 +37,7 @@ def read_column(workbookID, sheetID):
     headers = records[header_idx]
 
     WORKSHEET_DIR = os.path.join(BASE_DIR, "worksheet_column")
-    file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheetID}*')
+    file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheet.title}*')
 
     if file_name:
         return {"code": 409, "message": f"A file with the same configuration format existed, please look for file with the code and the gid at the url: {sheetID}"}
