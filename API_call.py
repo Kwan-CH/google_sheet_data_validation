@@ -2,8 +2,10 @@ from fastapi import FastAPI, Query, Body, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
 from core import main
 from core.config import read_column
+from typing import List
 import os
 import glob
+import shutil
 
 app = FastAPI()
 
@@ -57,17 +59,21 @@ async def download_json_file(filename: str = Query(...)):
     )
 
 @app.post("/upload-json")
-async def upload_json_file(file: UploadFile = File(...)):
-    if not file.filename.endswith(".json"):
-        raise HTTPException(status_code=400, detail="Only .json files are allowed")
+async def upload_json_files(files: List[UploadFile] = File(...)):
+    saved_files = []
+    for file in files:
+        if not file.filename.endswith(".json"):
+            raise HTTPException(status_code=400, detail=f"{file.filename} is not a JSON file.")
+        
+        save_path = os.path.join(JSON_FILE_PATH, file.filename)
+        try:
+            with open(save_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to upload file: {str(e)}")
+        finally:
+            file.file.close()
 
-    file_path = os.path.join(JSON_FILE_PATH, file.filename)
-
-    try:
-        contents = await file.read()
-        with open(file_path, "wb") as f:
-            f.write(contents)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to upload file: {str(e)}")
-
-    return {"message": "File uploaded successfully", "filename": file.filename}
+        saved_files.append(file.filename)
+    
+    return {"uploaded_files": saved_files}
