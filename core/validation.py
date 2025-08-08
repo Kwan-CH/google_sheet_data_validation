@@ -6,8 +6,8 @@ import os
 
 from components import clear_formatting
 from components import error_logging
-from components.customError import unrecognizedRule
-from components.getWorkbook import getWorkbook
+from components.custom_error import unrecognizedRule
+from components.get_workbook import getWorkbook
 from components.sort_location import sort_error_list
 from components.data_validator import Validator
 from components.structure_validator import correctFormat
@@ -19,7 +19,7 @@ with open(os.path.join(JSON_DIR, "config.json"), "r") as file:
     config = json.load(file)
 
 with open(os.path.join(JSON_DIR, "checkMap.json"), "r") as file:
-    rule_map = json.load(file)
+    rule_map = json.load(file)[0].get("Available")
 
 def highlightError(workbookID, sheetID, df, sorted_errors, headerIndex, column_rules):
     if len(sorted_errors) == 0:

@@ -3,7 +3,7 @@ import os
 
 import gspread
 from google.oauth2.service_account import Credentials
-import components.customError as customException
+import components.custom_error as customException
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, 'json', 'config.json')

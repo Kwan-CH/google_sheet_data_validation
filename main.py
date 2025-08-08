@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query, Body, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
-from core import main
-from core.config import read_column
+from core import validation
+from core.config import check_json_rule_existence
 from typing import List
 import os
 import glob
@@ -25,16 +25,15 @@ async def validate_post(payload: dict = Body(...)):
         workbookID = item.get('workbookID')
         sheetID = item.get('sheetID')
         sheetName = item.get('sheetName')
-        print(sheetName)
-        response= main.run_validation(workbookID, sheetID, sheetName)
-        print(response.get("message"))
+
+        response= validation.run_validation(workbookID, sheetID, sheetName)
         return {"code": response.get("code"), "message": f"{response.get("message")}"}
 
 @app.post("/initialize")
 async def initialize_post(payload: dict = Body(...)):
     worksheets = payload.get("worksheets")
     for worksheet in worksheets:
-        response = read_column(worksheet.get("workbookID"), worksheet.get("sheetID"))
+        response = check_json_rule_existence(worksheet.get("workbookID"), worksheet.get("sheetID"))
         return {"code": response.get("code"), "message": f"{response.get("message")}"}
 
 @app.get("/return-json")

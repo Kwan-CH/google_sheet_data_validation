@@ -3,7 +3,7 @@ from tkinter import filedialog
 import requests
 import os
 
-from core.main import run_validation
+from core.validation import run_validation
 
 BASE_URL = "http://localhost:8000"
 
@@ -24,11 +24,10 @@ def validate_post():
     # so you must use a list of dicts instead.
     payload = {
         "worksheets": [
-            {"workbookID": "1AztVEyWwm9akIkmy8lmwEpJQ5k1loslYznnWYxW4aWU", "sheetID": "0", "sheetName": "Demo_Test"}
+            {"workbookID": "1oFeGwkrIQTqZ_vkk71xB2RI7zpApio3mw7319WuvEvM", "sheetID": "0", "sheetName": "Demo_Test_1"}
         ]
     }
     response = requests.post(f"{BASE_URL}/validate", json=payload)
-    print(response)
 
 def initialise_post():
     # This simulates duplicate keys in the body.
@@ -36,7 +35,7 @@ def initialise_post():
     # so you must use a list of dicts instead.
     payload = {
         "worksheets": [
-            {"workbookID": "1AztVEyWwm9akIkmy8lmwEpJQ5k1loslYznnWYxW4aWU", "sheetID": "0"}
+            {"workbookID": "1oFeGwkrIQTqZ_vkk71xB2RI7zpApio3mw7319WuvEvM", "sheetID": "0"}
 
         ]
     }
@@ -61,6 +60,7 @@ def download_json_file(filename):
 def upload_json_file():
     # Currently works only in Windows OS
     json_file_path = filedialog.askopenfilenames(title="Select JSON file")
+    # json_file_path = filedialog.(title="Select JSON file")
     # if not json_file_path.endswith(".json"):
     #     print("Only .json files are allowed")
     #     return
@@ -76,7 +76,7 @@ def upload_json_file():
 # validate_get()
 
 # initialise_post()
-# validate_post()
+validate_post()
 # return_json_file()
 # download_json_file("sample.json")
-upload_json_file()
+# upload_json_file()
