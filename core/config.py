@@ -25,7 +25,7 @@ def check_json_rule_existence(workbookID, sheetID):
     workbook = getWorkbook(workbookID)
     sheet = workbook.get_worksheet_by_id(sheetID)
 
-    WORKSHEET_DIR = os.path.join(BASE_DIR, "worksheet_column", sheet.title)
+    WORKSHEET_DIR = os.path.join(BASE_DIR, "worksheet_column", f"{sheet.title}.json")
 
     try:
         with open(WORKSHEET_DIR, "r") as file:
