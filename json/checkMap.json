@@ -1,8 +1,13 @@
 [
   {
     "Available": {
+      "isText": {
+        "maxLength": "The maximum number of character allow",
+        "allowEmpty": "Default is false, option allow is true"
+      },
       "isContains": {
         "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, @, $",
+        "maxLength": "The maximum number of character allow",
         "allowEmpty": "Default is false, option allow is true"
       },
       "isNumeric": {
@@ -27,14 +32,11 @@
       "isInOption": {
         "options": "option that the cell should match",
         "allowEmpty": "Default is false, option allow is true"
-      },
-      "isAlphanumeric": {
-        "allowEmpty": "Default is false, option allow is true"
       }
     },
     "Bundled": {
-      "isEmpty": "",
-      "isASCII": ""
+      "isEmpty": "Check if a cell is empty",
+      "isASCII": "check if the cell value contain non-ascii character"
     }
   }
 ]

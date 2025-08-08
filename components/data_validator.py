@@ -52,8 +52,16 @@ class Validator:
                       "This section have unknown character, please remove any tab/enter key or special character")
         return mask
 
+    def maximumLength(self, column_name, maxLength):
+        if maxLength is None:
+            return pd.Series(False, index=self.df.index)
+        else:
+            mask = self.df[column_name].str.len() > maxLength
+            self.vectorized_log_error(mask, column_name, f"It have exceeded the maximum of {maxLength} character")
+            return mask
+
     # substring
-    def isContains(self, column_name, blackList=None, allowEmpty=False):
+    def isContains(self, column_name, maxLength = None, blackList=None, allowEmpty=False):
         if blackList is None or blackList.strip() == "":
             blackListed = self.DEFAULT_BLACKLIST
         else:
@@ -62,10 +70,11 @@ class Validator:
 
         blackListed = [re.escape(target.strip()) for target in blackListed]
 
-        non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
+        non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         ascii_row = ~(self.isASCII(column_name))
+        not_exceed_length = self.maximumLength(column_name, maxLength)
         pattern = '|'.join(blackListed)
-        mask = non_empty_row & ascii_row & self.df[column_name].str.contains(pattern)
+        mask = non_empty_row & ascii_row & not_exceed_length & self.df[column_name].str.contains(pattern)
         self.vectorized_log_error(mask, column_name,
                                       f"This section cannot have one of the following character: {pattern}")
 
@@ -168,18 +177,17 @@ class Validator:
             self.vectorized_log_error(mask, column_name,
                                   f"Please only enter the options available in [{options}], AS EXACTLY AS IT IS")
 
-    def isAlphanumeric(self, column_name, allowEmpty=False):
+    def isText(self, column_name, maxLength = None, allowEmpty=False):
         non_empty_row = (self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         non_ascii_row = ~(self.isASCII(column_name))
+        not_exceed_length = self.maximumLength(column_name, maxLength)
 
         if allowEmpty:
-            pattern = r"^[a-zA-Z0-9 ]*$"
+            pattern = r"^[a-zA-Z0-9 ,]*$"
         else:
-            pattern = r"^[a-zA-Z0-9 ]+$"
+            pattern = r"^[a-zA-Z0-9 ,]+$"
 
         non_alphanumeric = ~self.df[column_name].str.match(pattern)
-        mask = non_ascii_row & (non_empty_row | non_alphanumeric)
+        mask = non_ascii_row & non_empty_row & non_alphanumeric & not_exceed_length
         self.vectorized_log_error(mask, column_name,
-                                  f"Please only enter alphanumeric character, no symbols")
-
-#length, address, phone
+                                  f"Please only enter alphanumeric character, no symbols except comma")

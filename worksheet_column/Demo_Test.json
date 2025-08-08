@@ -1,8 +1,9 @@
 {
     "String": {
-        "rule": "isAlphanumeric",
+        "rule": "isText",
         "param": {
-            "allowEmpty": false
+            "allowEmpty": true,
+            "maxLength": 15
         }
     },
     "Number": {
