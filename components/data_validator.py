@@ -38,12 +38,12 @@ class Validator:
                 }
             )
 
-    def isEmpty(self, column_name, allowEmpty):
+    def isEmpty(self, column_name, allowEmpty, message):
         if allowEmpty:
             return pd.Series(False, index=self.df.index)
         else:
             mask = self.df[column_name].str.strip() == ""
-            self.vectorized_log_error(mask, column_name, "This cannot be empty, please fill in this section")
+            self.vectorized_log_error(mask, column_name, message)
             return mask
 
     def isASCII(self, column_name):
@@ -73,7 +73,7 @@ class Validator:
         try:
             numeric_col = pd.to_numeric(self.df[column_name], errors='coerce')
 
-            non_empty_row = ~self.isEmpty(column_name, allowEmpty)
+            non_empty_row = ~self.isEmpty(column_name, allowEmpty, "Put 0 if not applicable")
             isNumeric = numeric_col.notna()
             valid_row = non_empty_row & isNumeric
             if isinstance(allowNegative, bool):
@@ -107,13 +107,13 @@ class Validator:
             raise invalidMinMax from None
 
     def isEmail(self, column_name, allowEmpty=False):
-        non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
+        non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         ascii_row = ~(self.isASCII(column_name))
         mask = non_empty_row & ascii_row & ~self.df[column_name].str.match(self.EMAIL_PATTERN)
         self.vectorized_log_error(mask, column_name, "Please enter a valid email")
 
     def isDate(self, column_name, allowEmpty=False):
-        non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
+        non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         regex_match = self.df[column_name].str.match(self.DATE_REGEX)
         parsed_date = pd.to_datetime(self.df[column_name], format=self.DATE_FORMAT, errors="coerce")
 
@@ -128,7 +128,7 @@ class Validator:
                           "Please ensure you have enter a correct format, day/month/year, and please double confirm on leap year")
 
     def isDuplicate(self, column_name, allowEmpty=False):
-        non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
+        non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         ascii_row = ~(self.isASCII(column_name))
         valid_row  = non_empty_row & ascii_row
         non_empty = self.df.loc[valid_row, column_name]
@@ -151,7 +151,7 @@ class Validator:
         if prefix is None or prefix.strip() == "":
             raise invalidArgs("prefix", prefix, "Please enter a word or character to be use as prefix checker")
         else:
-            non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
+            non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
             ascii_row = ~(self.isASCII(column_name))
             mask = non_empty_row & ascii_row & ~self.df[column_name].str.startswith(prefix)
             self.vectorized_log_error(mask, column_name, f"Please enter data that starts with {prefix}")
@@ -161,7 +161,7 @@ class Validator:
         if options is None or options.strip() == "":
             raise invalidArgs("options", options, "Please enter a list of options that the cell should match")
         else:
-            non_empty_row = ~(self.isEmpty(column_name, allowEmpty))
+            non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
             ascii_row = ~(self.isASCII(column_name))
             option_list = [option.strip() for option in options.split(",")]
             mask = non_empty_row & ascii_row & ~self.df[column_name].isin(option_list)
@@ -169,7 +169,7 @@ class Validator:
                                   f"Please only enter the options available in [{options}], AS EXACTLY AS IT IS")
 
     def isAlphanumeric(self, column_name, allowEmpty=False):
-        non_empty_row = (self.isEmpty(column_name, allowEmpty))
+        non_empty_row = (self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         non_ascii_row = ~(self.isASCII(column_name))
 
         if allowEmpty:
