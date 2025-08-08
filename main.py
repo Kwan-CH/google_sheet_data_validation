@@ -4,7 +4,6 @@ from core import validation
 from core.config import check_json_rule_existence
 from typing import List
 import os
-import glob
 import shutil
 
 app = FastAPI()
@@ -46,9 +45,8 @@ async def return_json_file():
 
 @app.get("/download-json")
 async def download_json_file(filename: str = Query(...)):
-    file_path = glob.glob(f'{JSON_FILE_PATH}/*{filename}*')
-
-    if not file_path:
+    file_path = os.path.join(JSON_FILE_PATH, filename)
+    if not filename.endswith(".json") or not os.path.isfile(file_path):
         raise HTTPException(status_code=404, detail="File not found.")
     
     return FileResponse(
