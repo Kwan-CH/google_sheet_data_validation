@@ -51,7 +51,7 @@ def run_validation(workbookID, sheetID, sheetName):
         return {"code": 404, "message": "The correspond column rules json file haven't been create, please create and configure it now"}
     else:
         with open(file_name[0], "r") as file:
-            column_rules = json.load(file)
+            column_rules = json.load(file)[0]
 
         workbook = getWorkbook(workbookID)
         sheet = workbook.get_worksheet_by_id(sheetID)
