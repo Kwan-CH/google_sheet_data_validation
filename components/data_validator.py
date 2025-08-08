@@ -3,7 +3,7 @@ import re
 import pandas as pd
 from gspread.utils import rowcol_to_a1
 
-from components.customError import invalidMinMax, invalidArgs, missingPair
+from components.custom_error import invalidMinMax, invalidArgs, missingPair
 
 
 class Validator:
@@ -181,3 +181,5 @@ class Validator:
         mask = non_ascii_row & (non_empty_row | non_alphanumeric)
         self.vectorized_log_error(mask, column_name,
                                   f"Please only enter alphanumeric character, no symbols")
+
+#length, address, phone
