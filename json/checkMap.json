@@ -1,32 +1,40 @@
-{
-  "isContains": {
-    "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, @, $",
-    "allowEmpty": "Default is false, option allow is true"
-  },
-  "isNumeric": {
-    "minimum": "the minimum value, optional",
-    "maximum": "the maximum value, optional",
-    "allowNegative": "Default is False, option allow is True",
-    "allowEmpty":  "Default is false, option allow is true"
-  },
-  "isEmail": {
-    "allowEmpty":  "Default is false, option allow is true"
-  },
-  "isDate": {
-    "allowEmpty":  "Default is false, option allow is true"
-  },
-  "isDuplicate": {
-    "allowEmpty":  "Default is false, option allow is true"
-  },
-  "isPrefix": {
-    "prefix": "the word or character that the cell SHOULD start with",
-    "allowEmpty":  "Default is false, option allow is true"
-  },
-  "isInOption": {
-    "options": "option that the cell should match",
-    "allowEmpty":  "Default is false, option allow is true"
-  },
-  "isAlphanumeric": {
-    "allowEmpty":  "Default is false, option allow is true"
+[
+  {
+    "Available": {
+      "isContains": {
+        "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, @, $",
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isNumeric": {
+        "minimum": "the minimum value, optional",
+        "maximum": "the maximum value, optional",
+        "allowNegative": "Default is False, option allow is True",
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isEmail": {
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isDate": {
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isDuplicate": {
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isPrefix": {
+        "prefix": "the word or character that the cell SHOULD start with",
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isInOption": {
+        "options": "option that the cell should match",
+        "allowEmpty": "Default is false, option allow is true"
+      },
+      "isAlphanumeric": {
+        "allowEmpty": "Default is false, option allow is true"
+      }
+    },
+    "Bundled": {
+      "isEmpty": "",
+      "isASCII": ""
+    }
   }
-}
+]
