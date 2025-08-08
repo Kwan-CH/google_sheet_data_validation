@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Query, Body, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
 from core import validation
@@ -45,15 +47,16 @@ async def return_json_file():
 
 @app.get("/download-json")
 async def download_json_file(filename: str = Query(...)):
-    file_path = os.path.join(JSON_FILE_PATH, filename)
-    if not filename.endswith(".json") or not os.path.isfile(file_path):
+    file_path = os.path.join(JSON_FILE_PATH, f"{filename}.json")
+    try:
+        with open(file_path, "r") as file:
+            return FileResponse(
+                path=Path(file_path),
+                media_type="application/json",
+                filename=filename
+            )
+    except FileNotFoundError:
         raise HTTPException(status_code=404, detail="File not found.")
-    
-    return FileResponse(
-        path=file_path[0],
-        media_type="application/json",
-        filename=filename
-    )
 
 @app.post("/upload-json")
 async def upload_json_files(files: List[UploadFile] = File(...)):
