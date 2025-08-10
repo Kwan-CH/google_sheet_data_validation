@@ -10,11 +10,18 @@ import shutil
 
 app = FastAPI()
 
-# @app.get("/validate")
-# async def validate_get(sheetId: str = Query(...), sheetName: list[str] = Query(...)):
-#     print(f"GET Received sheetId: {sheetId}")
-#     print(f"GET Received sheetName: {sheetName}")
-#     return {"status": "success", "sheetId": sheetId, "sheetName": sheetName}
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to the Google Sheet API Service 🚀",
+        "endpoints": [
+            "/validate",
+            "/initialize",
+            "/return-json",
+            "/download-json",
+            "/upload-json"
+        ]
+    }
 
 JSON_FILE_PATH = "./worksheet_column"
 os.makedirs(JSON_FILE_PATH, exist_ok=True)
