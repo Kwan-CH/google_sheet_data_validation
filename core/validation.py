@@ -15,9 +15,6 @@ from components.structure_validator import correctFormat
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 JSON_DIR = os.path.join(BASE_DIR, 'json')
 
-with open(os.path.join(JSON_DIR, "config.json"), "r") as file:
-    config = json.load(file)
-
 with open(os.path.join(JSON_DIR, "checkMap.json"), "r") as file:
     rule_map = json.load(file)[0].get("Available")
 

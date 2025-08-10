@@ -4,7 +4,7 @@ import os
 from components.get_workbook import getWorkbook
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-CONFIG_JSON_PATH = os.path.join(BASE_DIR, 'json', 'config.json')
+
 WORKSHEET_COLUMN_PATH = os.path.join(BASE_DIR, 'worksheet_column')
 
 def write_column_rule(sheet, headers):
