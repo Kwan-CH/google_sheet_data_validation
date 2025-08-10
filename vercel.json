@@ -11,8 +11,5 @@
       "src": "/(.*)",
       "dest": "main.py"
     }
-  ],
-  "env": {
-    "GOOGLE_CREDENTIALS": "@google_credentials"
-  }
+  ]
 }
