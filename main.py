@@ -86,22 +86,15 @@ async def upload_json_files(files: List[UploadFile] = File(...)):
     return {"uploaded_files": saved_files}
 
 @app.delete("/delete-json")
-async def delete_json_file(
-    filename: str = Query(..., description="Name of the file"),
-    extension: str = Query(..., description="File extension, e.g. .json or .txt")
-):
-    # Ensure the extension starts with a dot
-    if not extension.startswith("."):
-        extension = "." + extension
+async def delete_json_file(filename: str = Query(..., description="Name of the file"),):
 
-    full_filename = filename + extension
-    file_path = os.path.join(JSON_FILE_PATH, full_filename)
+    file_path = os.path.join(JSON_FILE_PATH, filename)
 
     if not os.path.isfile(file_path):
         raise HTTPException(status_code=404, detail="File not found.")
 
     try:
         os.remove(file_path)
-        return {"message": f"{full_filename} deleted successfully."}
+        return {"message": f"{filename} deleted successfully."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete file: {str(e)}")
