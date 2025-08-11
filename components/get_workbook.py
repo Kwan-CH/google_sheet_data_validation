@@ -5,15 +5,9 @@ import gspread
 from google.oauth2.service_account import Credentials
 import components.custom_error as customException
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, 'json', 'config.json')
-
-credential = eval(os.environ["GOOGLE_CREDENTIAL"])
 
 try:
     with open(CONFIG_PATH, "r") as file:
@@ -24,9 +18,9 @@ except FileNotFoundError as e:
 def getWorkbook(workbookID):
     try:
         scopes = [
-            credential['scopes']
+            config['scopes']
         ]
-        creds = Credentials.from_service_account_info(credential, scopes=scopes)
+        creds = Credentials.from_service_account_info(config, scopes=scopes)
 
         client = gspread.authorize(creds)
         sheet_credential = workbookID
