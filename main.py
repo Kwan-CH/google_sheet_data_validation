@@ -54,7 +54,7 @@ async def return_json_file():
 
 @app.get("/download-json")
 async def download_json_file(filename: str = Query(...)):
-    file_path = os.path.join(JSON_FILE_PATH, f"{filename}.json")
+    file_path = os.path.join(JSON_FILE_PATH, filename)
     try:
         with open(file_path, "r") as file:
             return FileResponse(
