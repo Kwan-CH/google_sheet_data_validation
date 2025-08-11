@@ -15,11 +15,6 @@ load_dotenv()
 
 credential = eval(os.environ["GOOGLE_CREDENTIAL"])
 
-try:
-    with open(CONFIG_PATH, "r") as file:
-        config = json.load(file)
-except FileNotFoundError as e:
-    raise customException.missingConfigJSON from None
 
 def getWorkbook(workbookID):
     try:
