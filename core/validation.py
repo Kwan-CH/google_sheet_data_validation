@@ -19,12 +19,13 @@ with open(os.path.join(JSON_DIR, "checkMap.json"), "r") as file:
     rule_map = json.load(file)[0].get("Available")
 
 def highlightError(workbookID, sheetID, df, sorted_errors, headerIndex, column_rules):
+    workbook = getWorkbook(workbookID)
+    sheet = workbook.get_worksheet_by_id(sheetID)
     if len(sorted_errors) == 0:
         clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
+        error_logging.log_error(workbook, sheet.title)
         return 204, "No error found, can proceed to the next step...."
     else:
-        workbook = getWorkbook(workbookID)
-        sheet = workbook.get_worksheet_by_id(sheetID)
         clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
         error_logging.highlight_error(workbook, sheetID, sorted_errors)
         error_logging.log_error(workbook, sorted_errors, sheet.title)
