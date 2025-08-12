@@ -51,8 +51,9 @@ def run_validation(workbookID, sheetID, sheetName):
         with open(file_name[0], "r") as file:
             # ---------------------------------
             # Will be modified if JSON structure changes
-            column_rules = json.load(file)[0]["rules"]
-            headers_order = json.load(file)[0]["structure"]["columns"]
+            data = json.load(file)[0]
+            column_rules = data["rules"]
+            headers_order = data["structure"]["columns"]
             # ---------------------------------
 
         workbook = getWorkbook(workbookID)
@@ -66,7 +67,7 @@ def run_validation(workbookID, sheetID, sheetName):
             else:
                 header_idx = records.index(record)
                 break
-        correctFormatResponse = correctFormat(sheet, records[header_idx], column_rules)
+        correctFormatResponse = correctFormat(sheet, records[header_idx], column_rules, headers_order)
         if correctFormatResponse.get("status"):
             data = records[header_idx + 1:]
 

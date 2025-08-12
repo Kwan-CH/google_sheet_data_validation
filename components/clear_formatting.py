@@ -4,7 +4,7 @@ def clear_format(workbook, sheetID, headers, df, headerIdx):
                 "range": {
                     "sheetId": sheetID,
                     "startRowIndex": headerIdx + 1,
-                    "endRowIndex": len(df) + 1,
+                    "endRowIndex": len(df) + 1 + headerIdx,
                     "startColumnIndex": 0,
                     "endColumnIndex": len(headers),
                 },

@@ -26,13 +26,29 @@ def correctSheetName(sheet):
         return {"status": False, "error": "Please do not change the sheet's name"}
 
 # Check if the sheet header row is in the exact order and name as specificed in ./worksheet_column/[Title].json
-def correctColumnHeaderOrder():
-    pass
+def correctColumnHeaderOrder(headers, headers_order):
+    out_of_order = []
 
-def correctFormat(sheet, headers, column_rules):
+    max_len = max(len(headers_order), len(headers))
+    
+    for i in range(max_len):
+        exp = headers_order[i] if i < len(headers_order) else None
+        act = headers[i] if i < len(headers) else None
+
+        if exp != act:
+            out_of_order.append(f"Expected: {exp}, Found: {act} at column {i + 1}")
+
+    # Return status (T/F) and show columns with error
+    if not out_of_order:
+        return {"status": True, "error": ""}
+    else:
+        return {"status": False, "error": "Please do not change the order of column headers", "detail": out_of_order}
+
+def correctFormat(sheet, headers, column_rules, headers_order):
     column_name = correctColumnName(headers, column_rules)
     column_number = correctColumnNumber(headers, column_rules)
     sheet_name = correctSheetName(sheet)
+    header_order = correctColumnHeaderOrder(headers, headers_order)
 
     message = "There are some structure error as following:\n"
     if not column_name.get("status"):
@@ -44,7 +60,12 @@ def correctFormat(sheet, headers, column_rules):
     if not sheet_name.get("status"):
         message += f"-{sheet_name.get('error')}\n"
 
-    status = column_name.get("status") and column_number.get("status") and sheet_name.get("status")
+    if not header_order.get("status"):
+        message += f"-{header_order.get('error')}\n"
+        for msg in header_order.get("detail"):
+            message += f"-{msg}\n"
+
+    status = column_name.get("status") and column_number.get("status") and sheet_name.get("status") and header_order.get("status")
     # message += "Kindly revert your changes that stated"
 
     return {"status": status, "message": message}

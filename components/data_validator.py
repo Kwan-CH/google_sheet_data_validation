@@ -167,7 +167,7 @@ class Validator:
 
     # isEqual
     def isInOption(self, column_name, options=None, allowEmpty=False):
-        if options is None or options.strip() == "":
+        if options is None:
             raise invalidArgs("options", options, "Please enter a list of options that the cell should match")
         else:
             non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
