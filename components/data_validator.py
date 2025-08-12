@@ -181,6 +181,9 @@ class Validator:
                 option_list = [option.strip() for option in options]
             else:
                 raise(invalidArgs("options", options, "Options should be a string or a list of strings"))
+            
+            if allowEmpty:
+                option_list.append("")  # Allow empty string if allowEmpty is True
 
             mask = non_empty_row & ascii_row & ~self.df[column_name].isin(option_list)
             self.vectorized_log_error(mask, column_name,
