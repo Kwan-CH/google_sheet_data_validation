@@ -3,7 +3,8 @@
     "Available": {
       "isText": {
         "maxLength": "The maximum number of character allow",
-        "allowEmpty": "Default is false, option allow is true"
+        "allowEmpty": "Default is false, option allow is true",
+        "rejectChar": "String contains invalid characters"
       },
       "isContains": {
         "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, @, $",

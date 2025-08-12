@@ -172,22 +172,55 @@ class Validator:
         else:
             non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
             ascii_row = ~(self.isASCII(column_name))
-            option_list = [option.strip() for option in options.split(",")]
+            
+            # Make this function can receive both string and list of options
+            if isinstance(options, str):
+                # String of options separated by commas
+                option_list = [option.strip() for option in options.split(",")]
+            elif isinstance(options, list):
+                option_list = [option.strip() for option in options]
+            else:
+                raise(invalidArgs("options", options, "Options should be a string or a list of strings"))
+
             mask = non_empty_row & ascii_row & ~self.df[column_name].isin(option_list)
             self.vectorized_log_error(mask, column_name,
                                   f"Please only enter the options available in [{options}], AS EXACTLY AS IT IS")
 
-    def isText(self, column_name, maxLength = None, allowEmpty=False):
+    def isText(self, column_name, maxLength = None, allowEmpty=False, allowChar=None, rejectChar=None):
+        # Check a string if it is empty, ASCII characters only, and doesn't exceed maximum length
         non_empty_row = (self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         non_ascii_row = ~(self.isASCII(column_name))
         not_exceed_length = self.maximumLength(column_name, maxLength)
 
+        # Check a string if it is allowed to be empty or not
         if allowEmpty:
-            pattern = r"^[a-zA-Z0-9 ,]*$"
+            empty_modifier = "*"
         else:
-            pattern = r"^[a-zA-Z0-9 ,]+$"
+            empty_modifier = "+"
 
-        non_alphanumeric = ~self.df[column_name].str.match(pattern)
-        mask = non_ascii_row & non_empty_row & non_alphanumeric & not_exceed_length
-        self.vectorized_log_error(mask, column_name,
-                                  f"Please only enter alphanumeric character, no symbols except comma")
+        # Construct the regex string based on allowed and rejected characters
+        # Base is always a-z A-Z 0-9 space
+        base_pattern = "a-zA-Z0-9 "
+
+        # Append allowed characters if provided
+        if allowChar:
+            base_pattern += re.escape(allowChar)
+
+        # Create allowed character group
+        allow_group = f"[{base_pattern}]"
+
+        # Append rejected characters if provided
+        if rejectChar:
+            reject_group = f"[{re.escape(rejectChar)}]"
+            pattern = rf"^(?!.*{reject_group}){allow_group}{empty_modifier}$"
+        else:
+            pattern = rf"^{allow_group}{empty_modifier}$"
+
+        # Check if string matches the pattern constructured
+        non_regex = ~self.df[column_name].str.match(pattern)
+        mask = non_ascii_row & non_empty_row & non_regex & not_exceed_length
+        self.vectorized_log_error(
+            mask, 
+            column_name,    
+            f"Please only enter alphanumeric character and space, and should not contain any of these characters: {rejectChar if rejectChar else ""}"
+        )

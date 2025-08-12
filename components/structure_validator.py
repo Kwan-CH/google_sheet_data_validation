@@ -25,6 +25,10 @@ def correctSheetName(sheet):
     else:
         return {"status": False, "error": "Please do not change the sheet's name"}
 
+# Check if the sheet header row is in the exact order and name as specificed in ./worksheet_column/[Title].json
+def correctColumnHeaderOrder():
+    pass
+
 def correctFormat(sheet, headers, column_rules):
     column_name = correctColumnName(headers, column_rules)
     column_number = correctColumnNumber(headers, column_rules)

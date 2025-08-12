@@ -20,6 +20,7 @@ with open(os.path.join(JSON_DIR, "checkMap.json"), "r") as file:
 
 def highlightError(workbookID, sheetID, df, sorted_errors, headerIndex, column_rules):
     if len(sorted_errors) == 0:
+        clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
         return 204, "No error found, can proceed to the next step...."
     else:
         workbook = getWorkbook(workbookID)
@@ -45,10 +46,14 @@ def run_validation(workbookID, sheetID, sheetName):
     file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheetName}*')
 
     if not file_name:
-        return {"code": 404, "message": "The correspond column rules json file haven't been create, please create and configure it now"}
+        return {"code": 404, "message": "The corresponding column rules json file haven't been create, please create and configure it now"}
     else:
         with open(file_name[0], "r") as file:
-            column_rules = json.load(file)[0]
+            # ---------------------------------
+            # Will be modified if JSON structure changes
+            column_rules = json.load(file)[0]["rules"]
+            headers_order = json.load(file)[0]["structure"]["columns"]
+            # ---------------------------------
 
         workbook = getWorkbook(workbookID)
         sheet = workbook.get_worksheet_by_id(sheetID)
