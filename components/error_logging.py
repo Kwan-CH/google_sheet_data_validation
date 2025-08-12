@@ -39,8 +39,8 @@ def highlight_error(workbook, sheetID, sorted_errors):
     workbook.batch_update({"requests": requests})
 
 def log_error(workbook, sheetTitle, sorted_errors=None):
-    if sorted_errors is None:
-        rows = [["No error found"]]
+    if isinstance(sorted_errors, str):
+        rows = [[sorted_errors]]
     else:
         rows = [['Location', 'Error']]
         rows += [[entry['location'], entry['error']] for entry in sorted_errors]

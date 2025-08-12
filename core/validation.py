@@ -23,12 +23,12 @@ def highlightError(workbookID, sheetID, df, sorted_errors, headerIndex, column_r
     sheet = workbook.get_worksheet_by_id(sheetID)
     if len(sorted_errors) == 0:
         clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
-        error_logging.log_error(workbook, sheet.title)
+        error_logging.log_error(workbook, sheet.title, "No error found, thank you for your cooperation")
         return 204, "No error found, can proceed to the next step...."
     else:
         clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
         error_logging.highlight_error(workbook, sheetID, sorted_errors)
-        error_logging.log_error(workbook, sorted_errors, sheet.title)
+        error_logging.log_error(workbook, sheet.title, sorted_errors)
         return 200, "Validation rules has been applied the error has logged, please check"
 
 def formatCheck(headers, column_rules):
@@ -95,4 +95,5 @@ def run_validation(workbookID, sheetID, sheetName):
             code, message = highlightError(workbookID, sheetID, df, sorted_errors, header_idx, column_rules)
             return {"code": code, "message": message}
         else:
+            error_logging.log_error(workbook, sheet.title, correctFormatResponse['message'])
             return {"code": 400, "message": correctFormatResponse.get("message") + "Kindly revert the changes that you have made"}
