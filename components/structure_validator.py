@@ -25,6 +25,25 @@ def correctSheetName(sheet):
     else:
         return {"status": False, "error": "Please do not change the sheet's name"}
 
+# Helper function to get the column label based on the column number
+def number_to_excel_column(n):
+    """
+    Convert a number to its Excel column label.
+    """
+    if n < 1:
+        raise ValueError("Column number must be positive integer.")
+    
+    column_label = ""
+
+    while n > 0:
+        n -= 1
+        rem = n % 26
+        column_label += chr(rem + ord('A'))
+        n //= 26
+
+    # reverse the string
+    return column_label[::-1]
+
 # Check if the sheet header row is in the exact order and name as specificed in ./worksheet_column/[Title].json
 def correctColumnHeaderOrder(headers, headers_order):
     out_of_order = []
@@ -36,7 +55,7 @@ def correctColumnHeaderOrder(headers, headers_order):
         act = headers[i] if i < len(headers) else None
 
         if exp != act:
-            out_of_order.append(f"Expected: {exp}, Found: {act} at column {i + 1}")
+            out_of_order.append(f"Expected: {exp}, Found: {act} at column {number_to_excel_column(i + 1)}")
 
     # Return status (T/F) and show columns with error
     if not out_of_order:
