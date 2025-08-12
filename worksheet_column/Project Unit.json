@@ -1,0 +1,231 @@
+[
+  {
+    "rules": {
+      "Company": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Project": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Phase": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Block": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Zone": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Lot": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Unit Type": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Bumi": {
+        "rule": "isInOption",
+        "param": {
+          "options": "Y, N",
+          "allowEmpty": false
+        }
+      },
+      "Level": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Floor": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Land Area": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Built Area": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Extra Land": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Currency": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Listed Price": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Bumi Price": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Tax Code": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "UOM": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Bedroom": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Bathroom": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Carpark": {
+        "rule": "isNumeric",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Direction": {
+        "rule": "isInOption",
+        "param": {
+          "options":[
+            "NORTH",
+            "SOUTH",
+            "WEST",
+            "EAST",
+            "NORTH WEST",
+            "SOUTH WEST",
+            "NORTH EAST",
+            "SOUTH EAST"
+          ],
+          "allowEmpty": false
+        }
+      },
+      "Entrance": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": true
+        }
+      },
+      "View": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": true
+        }
+      },
+      "Position": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": true
+        }
+      },
+      "Property Type": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Schedule": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "HSD No": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": true
+        }
+      },
+      "PTD No": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      },
+      "Status": {
+        "rule": "isText",
+        "param": {
+          "allowEmpty": false
+        }
+      }
+    },
+    "structure": {
+      "columns": [
+        "Company",
+        "Project",
+        "Phase",
+        "Block",
+        "Zone",
+        "Lot",
+        "Unit Type",
+        "Bumi",
+        "Level",
+        "Floor",
+        "Land Area",
+        "Built Area",
+        "Extra Land",
+        "Currency",
+        "Listed Price",
+        "Bumi Price",
+        "Tax Code",
+        "UOM",
+        "Bedroom",
+        "Bathroom",
+        "Carpark",
+        "Direction",
+        "Entrance",
+        "View",
+        "Position",
+        "Property Type",
+        "Schedule",
+        "HSD No",
+        "PTD No",
+        "Status"
+      ]
+    }
+  }
+]
