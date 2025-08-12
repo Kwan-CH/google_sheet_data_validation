@@ -7,17 +7,43 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 WORKSHEET_COLUMN_PATH = os.path.join(BASE_DIR, 'worksheet_column')
 
-def write_column_rule(sheet, headers):
-    name = sheet.title
-    headers_json = {
+# Modify this code based on new JSON format
+"""
+{
+    "rules": {
         header: {
             "rule": "",
-            "param":{
+            "param": {
                 "allowEmpty": False
             }
         }
         for header in headers
+    },
+    "structure": {
+        "columns": headers 
     }
+}
+"""
+# This function reads the sheet header and generates a JSON rule config file
+# The "structure" section excactly copies the header of the sheet and follow its order
+# Future addition can involve version control by warping everything in a "version" key
+def write_column_rule(sheet, headers):
+    name = sheet.title
+    headers_json = {
+        "rules": {
+            header: {
+                "rule": "",
+                "param": {
+                    "allowEmpty": False
+                }
+            }
+            for header in headers
+        },
+        "structure": {
+            "columns": headers
+        }
+    }
+
     with open(os.path.join(WORKSHEET_COLUMN_PATH, f"{name}.json"), "x") as file:
         json.dump(headers_json, file, indent=4)
 
