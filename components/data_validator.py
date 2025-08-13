@@ -186,41 +186,47 @@ class Validator:
             self.vectorized_log_error(mask, column_name,
                                   f"Please only enter the options available in {options}, AS EXACTLY AS IT IS")
 
-    def isText(self, column_name, maxLength = None, allowEmpty=False, allowChar=None , rejectChar=None):
-        # Check a string if it is empty, ASCII characters only, and doesn't exceed maximum length
-        non_empty_row = (self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
-        non_ascii_row = ~(self.isASCII(column_name))
-        not_exceed_length = self.maximumLength(column_name, maxLength)
+    def isText(self, column_name, maxLength=None, allowEmpty=False, allowChar=None, rejectChar=None):
+        """
+        Validate that a column contains only allowed characters, meets length limits,
+        respects empty-allowed setting, and matches ASCII constraints.
+        """
 
-        # Check a string if it is allowed to be empty or not
-        if allowEmpty:
-            empty_modifier = "*"
-        else:
-            empty_modifier = "+"
+        # 1. Run individual checks (True = invalid)
+        empty_invalid = self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section")
+        ascii_invalid = self.isASCII(column_name)
+        length_invalid = self.maximumLength(column_name, maxLength)
 
-        # Construct the regex string based on allowed and rejected characters
-        # Base is always a-z A-Z 0-9 space
-        base_pattern = "a-zA-Z0-9 "
+        # 2. Determine regex repetition: "+" = 1+ chars, "*" = 0+ chars
+        repetition = "*" if allowEmpty else "+"
 
-        # Append allowed characters if provided
-        if allowChar:
+        # 3. Build allowed characters base
+        base_pattern = "a-zA-Z0-9 "  # always allow alphanumeric and space
+
+        if allowChar:  # Add extra allowed chars, escaping special regex symbols
             base_pattern += re.escape(allowChar)
 
-        # Create allowed character group
         allow_group = f"[{base_pattern}]"
 
-        # Append rejected characters if provided
+        # 4. Handle rejected characters
         if rejectChar:
             reject_group = f"[{re.escape(rejectChar)}]"
-            pattern = rf"^(?!.*{reject_group}){allow_group}{empty_modifier}$"
+            # Negative lookahead to disallow rejected chars
+            pattern = rf"^(?!.*{reject_group}){allow_group}{repetition}$"
         else:
-            pattern = rf"^{allow_group}{empty_modifier}$"
+            pattern = rf"^{allow_group}{repetition}$"
 
-        # Check if string matches the pattern constructured
-        non_regex = ~self.df[column_name].str.match(pattern)
-        mask = non_ascii_row & non_empty_row & non_regex & not_exceed_length
+        # 5. Check regex (True = invalid)
+        regex_invalid = ~self.df[column_name].str.fullmatch(pattern)
+
+        # 6. Combine all invalid checks with OR (any fail = invalid)
+        regex_only_invalid = regex_invalid & ~(
+                empty_invalid | ascii_invalid | length_invalid
+        )
+
+        # 7. Log error message for invalid rows
         self.vectorized_log_error(
-            mask, 
-            column_name,    
-            f"Please only enter alphanumeric character and space, and should not contain any of these characters: {rejectChar if rejectChar else ""}"
+            regex_only_invalid,
+            column_name,
+            f"Please only enter alphanumeric characters and spaces and avoid these: {rejectChar if rejectChar else ''}"
         )
