@@ -46,7 +46,7 @@
       "Bumi": {
         "rule": "isInOption",
         "param": {
-          "options": "Y, N",
+          "options": ["Y, N"],
           "allowEmpty": false
         }
       },
