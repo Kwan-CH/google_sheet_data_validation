@@ -1,6 +1,7 @@
 import gspread
 from gspread.utils import a1_to_rowcol
 
+
 def highlight_error(workbook, sheetID, sorted_errors):
     requests = []
     for error in sorted_errors:
@@ -38,6 +39,7 @@ def highlight_error(workbook, sheetID, sorted_errors):
 
     workbook.batch_update({"requests": requests})
 
+
 def log_error(workbook, sheetTitle, sorted_errors=None):
     if isinstance(sorted_errors, str):
         rows = [[sorted_errors]]
@@ -52,3 +54,19 @@ def log_error(workbook, sheetTitle, sorted_errors=None):
 
     error_ws.clear()
     error_ws.update(range_name='A1', values=rows)
+
+    body = {
+        "requests": [
+            {
+                "updateDimensionProperties": {
+                    "range": {
+                        "sheetId": error_ws.id,
+                        "dimension": "COLUMNS",
+                        "startIndex": 0,
+                        "endIndex": len(rows[0])
+                    }
+                }
+            }
+        ]
+    }
+    workbook.batch_update(body)
