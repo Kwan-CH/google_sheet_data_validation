@@ -2,37 +2,38 @@
   {
     "Available": {
       "isText": {
-        "maxLength": "The maximum number of character allow",
-        "allowEmpty": "Default is false, option allow is true",
-        "rejectChar": "String contains invalid characters"
+        "maxLength": "The maximum number of character allow,  int",
+        "allowChar": "Allowed character, str, no need separate, just combine all",
+        "rejectChar": "String contains invalid characters, str, no need separate, just combine all",
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isContains": {
-        "blackList": "word or character that shouldn't exist in the cell, optional, default has already covered %, #, @, $",
-        "maxLength": "The maximum number of character allow",
-        "allowEmpty": "Default is false, option allow is true"
+        "blackList": "word or character that shouldn't exist in the cell, default has already covered %, #, @, $, str separate by comma space",
+        "maxLength": "The maximum number of character allow, int",
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isNumeric": {
-        "minimum": "the minimum value, optional",
-        "maximum": "the maximum value, optional",
-        "allowNegative": "Default is False, option allow is True",
-        "allowEmpty": "Default is false, option allow is true"
+        "minimum": "the minimum value, optional, int",
+        "maximum": "the maximum value, optional, int",
+        "allowNegative": "Default is False, option allow is true, bool",
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isEmail": {
-        "allowEmpty": "Default is false, option allow is true"
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isDate": {
-        "allowEmpty": "Default is false, option allow is true"
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isDuplicate": {
-        "allowEmpty": "Default is false, option allow is true"
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isPrefix": {
-        "prefix": "the word or character that the cell SHOULD start with",
-        "allowEmpty": "Default is false, option allow is true"
+        "prefix": "the word or character that the cell SHOULD start with, str",
+        "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isInOption": {
-        "options": "option that the cell should match",
-        "allowEmpty": "Default is false, option allow is true"
+        "options": "option that the cell should match, list[str]",
+        "allowEmpty": "Default is false, option allow is true, bool"
       }
     },
     "Bundled": {
