@@ -184,7 +184,7 @@ class Validator:
 
             mask = non_empty_row & ascii_row & ~self.df[column_name].isin(option_list)
             self.vectorized_log_error(mask, column_name,
-                                  f"Please only enter the options available in [{options}], AS EXACTLY AS IT IS")
+                                  f"Please only enter the options available in {options}, AS EXACTLY AS IT IS")
 
     def isText(self, column_name, maxLength = None, allowEmpty=False, allowChar=None , rejectChar=None):
         # Check a string if it is empty, ASCII characters only, and doesn't exceed maximum length

@@ -58,8 +58,8 @@ def log_error(workbook, sheetTitle, sorted_errors=None):
     body = {
         "requests": [
             {
-                "updateDimensionProperties": {
-                    "range": {
+                "autoResizeDimensions": {
+                    "dimensions": {
                         "sheetId": error_ws.id,
                         "dimension": "COLUMNS",
                         "startIndex": 0,

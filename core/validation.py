@@ -95,5 +95,5 @@ def run_validation(workbookID, sheetID, sheetName):
             code, message = highlightError(workbookID, sheetID, df, sorted_errors, header_idx, column_rules)
             return {"code": code, "message": message}
         else:
-            error_logging.log_error(workbook, sheet.title, correctFormatResponse['message'])
-            return {"code": 400, "message": correctFormatResponse.get("message") + "Kindly revert the changes that you have made"}
+            error_logging.log_error(workbook, sheet.title, correctFormatResponse['message'] + "\nKindly revert the changes that you have made")
+            return {"code": 400, "message": correctFormatResponse.get("message") + "\nKindly revert the changes that you have made"}

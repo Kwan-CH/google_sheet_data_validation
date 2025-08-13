@@ -61,7 +61,7 @@ def correctColumnHeaderOrder(headers, headers_order):
     if not out_of_order:
         return {"status": True, "error": ""}
     else:
-        return {"status": False, "error": "Please do not change the order of column headers", "detail": out_of_order}
+        return {"status": False, "error": "Please do not change the order of column headers", "detail": f"The correct order should be:\n{headers_order}"}
 
 def correctFormat(sheet, headers, column_rules, headers_order):
     column_name = correctColumnName(headers, column_rules)
@@ -81,8 +81,7 @@ def correctFormat(sheet, headers, column_rules, headers_order):
 
     if not header_order.get("status"):
         message += f"-{header_order.get('error')}\n"
-        for msg in header_order.get("detail"):
-            message += f"-{msg}\n"
+        message += f"{header_order.get("detail")}"
 
     status = column_name.get("status") and column_number.get("status") and sheet_name.get("status") and header_order.get("status")
     # message += "Kindly revert your changes that stated"
