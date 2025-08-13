@@ -24,7 +24,7 @@ def highlightError(workbookID, sheetID, df, sorted_errors, headerIndex, column_r
     if len(sorted_errors) == 0:
         clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
         error_logging.log_error(workbook, sheet.title, "No error found, thank you for your cooperation")
-        return 204, "No error found, can proceed to the next step...."
+        return 200, "No error found, can proceed to the next step...."
     else:
         clear_formatting.clear_format(workbook, sheetID, list(column_rules.keys()), df, headerIndex)
         error_logging.highlight_error(workbook, sheetID, sorted_errors)
