@@ -1,4 +1,5 @@
 import re
+from http.client import HTTPException
 
 import pandas as pd
 from gspread.utils import rowcol_to_a1
@@ -60,7 +61,7 @@ class Validator:
             self.vectorized_log_error(mask, column_name, f"It have exceeded the maximum of {maxLength} character")
             return mask
 
-    # substring
+    # substring - kinda obsolete
     def isContains(self, column_name, maxLength = None, blackList=None, allowEmpty=False):
         if blackList is None or blackList.strip() == "":
             blackListed = self.DEFAULT_BLACKLIST
@@ -172,15 +173,11 @@ class Validator:
         else:
             non_empty_row = ~(self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
             ascii_row = ~(self.isASCII(column_name))
-            
-            # Make this function can receive both string and list of options
-            if isinstance(options, str):
-                # String of options separated by commas
-                option_list = [option.strip() for option in options.split(",")]
-            elif isinstance(options, list):
+
+            if isinstance(options, list):
                 option_list = [option.strip() for option in options]
             else:
-                raise(invalidArgs("options", options, "Options should be a string or a list of strings"))
+                raise(invalidArgs("options", options, "Options should be a list of strings"))
             
             if allowEmpty:
                 option_list.append("")  # Allow empty string if allowEmpty is True
@@ -189,7 +186,7 @@ class Validator:
             self.vectorized_log_error(mask, column_name,
                                   f"Please only enter the options available in [{options}], AS EXACTLY AS IT IS")
 
-    def isText(self, column_name, maxLength = None, allowEmpty=False, allowChar=None, rejectChar=None):
+    def isText(self, column_name, maxLength = None, allowEmpty=False, allowChar=None , rejectChar=None):
         # Check a string if it is empty, ASCII characters only, and doesn't exceed maximum length
         non_empty_row = (self.isEmpty(column_name, allowEmpty, "This cannot be empty, please fill in this section"))
         non_ascii_row = ~(self.isASCII(column_name))
