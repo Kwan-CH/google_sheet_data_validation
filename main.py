@@ -1,7 +1,9 @@
 from pathlib import Path
 
-from fastapi import FastAPI, Query, Body, HTTPException, UploadFile, File
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Query, Body, HTTPException, UploadFile, File, Request
+from fastapi.responses import FileResponse, JSONResponse
+
+from components.custom_error import *
 from core import validation
 from core.config import check_json_rule_existence
 from typing import List
@@ -35,14 +37,14 @@ async def validate_post(payload: dict = Body(...)):
         sheetName = item.get('sheetName')
 
         response= validation.run_validation(workbookID, sheetID, sheetName)
-        return {"code": response.get("code"), "message": f"{response.get("message")}"}
+        raise HTTPException(status_code=response.get("code"), detail=f"{response.get("message")}")
 
 @app.post("/initialize")
 async def initialize_post(payload: dict = Body(...)):
     worksheets = payload.get("worksheets")
     for worksheet in worksheets:
         response = check_json_rule_existence(worksheet.get("workbookID"), worksheet.get("sheetID"))
-        return {"code": response.get("code"), "message": f"{response.get("message")}"}
+        raise HTTPException(status_code=response.get("code"), detail=f"{response.get("message")}")
 
 @app.get("/return-json")
 async def return_json_file():
@@ -98,3 +100,17 @@ async def delete_json_file(filename: str = Query(..., description="Name of the f
         return {"message": f"{filename} deleted successfully."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete file: {str(e)}")
+
+@app.exception_handler(Exception)
+async def custom_exception_handler(request: Request, exc: Exception):
+    # Only catch your defined exceptions
+    if isinstance(exc, (
+        missingConfigJSON, missingField, unrecognizedRule,
+        invalidMinMax, invalidArgs, missingPair
+    )):
+        return JSONResponse(
+            status_code=400,
+            content={"error": str(exc)}
+        )
+    # Otherwise, let FastAPI handle it normally
+    raise exc
