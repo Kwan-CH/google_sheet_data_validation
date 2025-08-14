@@ -186,7 +186,7 @@ class Validator:
             self.vectorized_log_error(mask, column_name,
                                   f"Please only enter the options available in {options}, AS EXACTLY AS IT IS")
 
-    def isText(self, column_name, maxLength=None, allowEmpty=False, allowChar=None, rejectChar=None):
+    def isText(self, column_name, maxLength=None, allowEmpty=False, allowChar=None, rejectChar=None, allUpper=True): #allUper: True, trim: True
         """
         Validate that a column contains only allowed characters, meets length limits,
         respects empty-allowed setting, and matches ASCII constraints.
@@ -223,6 +223,16 @@ class Validator:
         regex_only_invalid = regex_invalid & ~(
                 empty_invalid | ascii_invalid | length_invalid
         )
+        if allUpper:
+            # Allow spaces/numbers, but all letters must be uppercase
+            upper_invalid = ~self.df[column_name].str.isupper()
+            # Exclude rows already invalid from other checks
+            upper_only_invalid = upper_invalid & ~(empty_invalid | ascii_invalid | length_invalid | regex_invalid)
+            self.vectorized_log_error(
+                upper_only_invalid,
+                column_name,
+                "Text must be all uppercase letters"
+            )
 
         # 7. Log error message for invalid rows
         self.vectorized_log_error(

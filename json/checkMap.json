@@ -5,6 +5,7 @@
         "maxLength": "The maximum number of character allow,  int",
         "allowChar": "Allowed character, str, no need separate, just combine all",
         "rejectChar": "String contains invalid characters, str, no need separate, just combine all",
+        "allUpper": "Check if the data is all uppercase letter, default is true",
         "allowEmpty": "Default is false, option allow is true, bool"
       },
       "isContains": {
