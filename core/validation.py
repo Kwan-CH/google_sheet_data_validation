@@ -41,7 +41,23 @@ def formatCheck(headers, column_rules):
             break
     return correctFormat
 
+# def init_validation(sheetName: str)
+# Check if isInOption's "option" is dict and can be found in the same folder
+# Details will be stored as a dict
+# {"fileName": "xxx", "columnName", "yyy"}
+def init_validation(sheetName: str):
+    pass
 
+# def prepare_validation(details: dict, sheetName: str)
+# details Parameter contains workbookID, sheetID, columnName
+# Read the specified Google Sheet file and return the header(s) column data as list
+# Prepare the valid options specified in isInOption's dict, and return a dict "rules", modified from the original JSON file in runtime
+# for run_validation
+def prepare_validation(details: dict, sheetName: str):
+    pass
+
+# Change to accept "rules" as dict parameter
+# Run init_validation and prepare_validation before the validation process
 def run_validation(workbookID, sheetID, sheetName):
     WORKSHEET_DIR = os.path.join(BASE_DIR, "worksheet_column")
     file_name = glob.glob(f'{WORKSHEET_DIR}/*{sheetName}*')
