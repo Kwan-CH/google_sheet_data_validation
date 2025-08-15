@@ -1,0 +1,88 @@
+{
+  "rules": {
+    // ---- isText ----
+    "Unit No": {			// Default only covers alphanumeric, letters and numbers only
+      "rule": "isText",			// Best for special character
+      "param": {
+        "maxLength": 10,                // Optional: overrides default
+        "allowChar": "ABC123-",         // Optional: allowed characters
+        "rejectChar": "!@#$%",          // Optional: characters NOT allowed
+	    "allUpper": true		// Optional: check if the data is all upper case letter
+        "allowEmpty": false             // Optional: defaults to false
+      }
+    },
+
+    // ---- isContains ----
+    "Owner Name": {
+      "rule": "isContains",		// Best for substring
+      "param": {
+        "blackList": "Ltd, Inc",        // Words NOT allowed (comma + space separated), default has already covered %, #, @, $
+        "maxLength": 50,                // Optional
+        "allowEmpty": false
+      }
+    },
+
+    // ---- isNumeric ----
+    "Amount": {
+      "rule": "isNumeric",
+      "param": {
+        "minimum": 0,                   // If you set this, MUST also set maximum, vice versa
+        "maximum": 5000,                 // Must be present if minimum is present, vice versa
+        "allowNegative": false,         // Optional: defaults to false
+        "allowEmpty": false
+      }
+    },
+
+    // ---- isEmail ----
+    "Contact Email": {
+      "rule": "isEmail",
+      "param": {
+        "allowEmpty": true               // Optional: defaults to false
+      }
+    },
+
+    // ---- isDate ----
+    "Document Date": {
+      "rule": "isDate",
+      "param": {
+        "allowEmpty": false
+      }
+    },
+
+    // ---- isDuplicate ----
+    "Document No": {
+      "rule": "isDuplicate",
+      "param": {
+        "allowEmpty": false
+      }
+    },
+
+    // ---- isPrefix ----
+    "Reference Code": {
+      "rule": "isPrefix",
+      "param": {
+        "prefix": "INV-",                // Required for isPrefix
+        "allowEmpty": false
+      }
+    },
+
+    // ---- isInOption ----
+    "Billing Item": {
+      "rule": "isInOption",
+      "param": {
+        "options": ["Water", "Electricity", "Maintenance"], // Must be list[str]
+        "allowEmpty": false
+      }
+    },
+
+    // ---- Bundled: isEmpty ----
+    "Extra Notes": {
+      "rule": "isEmpty"                  // Checks if cell is empty
+    },
+
+    // ---- Bundled: isASCII ----
+    "Remarks": {
+      "rule": "isASCII"                  // Checks if only ASCII characters are used
+    }
+  }
+}
